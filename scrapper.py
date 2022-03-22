@@ -53,7 +53,10 @@ class Crawler:
 
         for article_link in article_bs.find_all("a", {"class": "article_title"}):
             if len(self.urls) < self.max_articles:
-                urls.append(DOMAIN + article_link["href"])
+                if re.match(r'https?://kantiana\.vestnik\.ru/', article_link['href']):
+                    self.urls.append(link['href'])
+                else:
+                    urls.append(DOMAIN + article_link["href"])
 
         return urls
 
