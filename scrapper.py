@@ -35,7 +35,7 @@ class IncorrectNumberOfArticlesError(Exception):
     """
 
 
-class PDFCrawler:
+class Crawler:
     """
     Crawler implementation
     """
@@ -119,7 +119,7 @@ def validate_config(crawler_path):
     return urls, articles
 
 
-class HTMLWithPDFParser:
+class HTMLParser:
 
     def __init__(self, article_url, article_id):
         """
@@ -180,12 +180,12 @@ if __name__ == '__main__':
     s_urls, all_articles = validate_config(CRAWLER_CONFIG_PATH)
 
     # initiating Crawler with PDF class instance and extract article links
-    crawler = PDFCrawler(s_urls, all_articles)
+    crawler = Crawler(s_urls, all_articles)
     crawler.find_articles()
 
     # extracting pdf, parsing pdf and saving text from every article link
-    # stored in PDFCrawler instance
+    # stored in Crawler instance
     for i, link in enumerate(crawler.urls):
-        parser = HTMLWithPDFParser(link, i + 1)
+        parser = HTMLParser(link, i + 1)
         article = parser.parse()
         article.save_raw()
