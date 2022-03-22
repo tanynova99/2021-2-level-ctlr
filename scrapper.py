@@ -62,23 +62,27 @@ class PDFCrawler:
         Finds articles
         """
 
-        for seed_url in self.seed_urls:
-            response = requests.get(seed_url, headers=HEADERS)
-            if not response.ok:
-                print("Request was unsuccessful.")
-                continue
+        if len(self.seed_urls) >= self.max_articles:
+            exit()
+
+        else:
+            for seed_url in self.seed_urls:
+                response = requests.get(seed_url, headers=HEADERS)
+                if not response.ok:
+                    print("Request was unsuccessful.")
+                    continue
 
             article_text = BeautifulSoup(response.text, features="html.parser")
             self._extract_url(article_text)
-
             sleep_period = random.randrange(3, 7)
             time.sleep(sleep_period)
 
-    def get_search_urls(self):
-        """
-        Returns seed_urls param
-        """
-        return self.seed_urls
+
+def get_search_urls(self):
+    """
+    Returns seed_urls param
+    """
+    return self.seed_urls
 
 
 def prepare_environment(base_path):
