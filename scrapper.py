@@ -51,14 +51,9 @@ class Crawler:
         """
         urls = []
 
-        for article_link in article_bs.find_all("a", {"class": "article_title"}):
+        for article_link in article_bs.find_all("a", {"class": "article__title"}):
             if len(self.urls) < self.max_articles:
-                if re.match(r'https?://kantiana\.vestnik\.ru/', article_link['href']):
-                    self.urls.append(article_link['href'])
-                else:
-                    urls.append(DOMAIN + article_link["href"])
-
-        return urls
+                urls.append(DOMAIN + article_link["href"])
 
     def find_articles(self):
         """
@@ -67,16 +62,15 @@ class Crawler:
 
         for seed_url in self.seed_urls:
             response = requests.get(seed_url, headers=HEADERS)
+            sleep_period = random.randrange(3, 7)
+            time.sleep(sleep_period)
 
             if not response.ok:
                 print("Request was unsuccessful.")
                 continue
 
-            article_text = BeautifulSoup(response.text, features="html.parser")
-            self.urls.extend(self._extract_url(article_text))
-
-            sleep_period = random.randrange(3, 7)
-            time.sleep(sleep_period)
+            article_bs = BeautifulSoup(response.text, features="html.parser")
+            self._extract_url(article_bs)
 
 
 def get_search_urls(self):
