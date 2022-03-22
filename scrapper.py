@@ -50,7 +50,6 @@ class PDFCrawler:
         get link to the article
         """
         urls = []
-        url_count = len(self.urls)
 
         for article_link in article_bs.find_all("a", class_="article_title"):
             urls.append(''.join([DOMAIN, article_link.get("href")]))
@@ -62,15 +61,12 @@ class PDFCrawler:
         Finds articles
         """
 
-        if len(self.seed_urls) >= self.max_articles:
-            exit()
+        for seed_url in self.seed_urls:
+            response = requests.get(seed_url, headers=HEADERS)
 
-        else:
-            for seed_url in self.seed_urls:
-                response = requests.get(seed_url, headers=HEADERS)
-                if not response.ok:
-                    print("Request was unsuccessful.")
-                    continue
+            if not response.ok:
+                print("Request was unsuccessful.")
+                continue
 
             article_text = BeautifulSoup(response.text, features="html.parser")
             self._extract_url(article_text)
