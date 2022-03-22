@@ -46,8 +46,10 @@ class PDFCrawler:
         self.max_articles = max_articles
         self.urls = []
 
-    def _extract_url(article_bs):
-
+    def _extract_url(self, article_bs):
+        """
+        get link to the article
+        """
         urls = []
         for article_link in article_bs.find_all("a", class_="article_title"):
             urls.append(''.join([DOMAIN, article_link.get("href")]))
@@ -165,7 +167,7 @@ class HTMLWithPDFParser:
         authors = article_bs.find_all("a", class_="link link_const article__author")
         self.article.author = authors.text
 
-        date_raw = re.search("\d{4} Выпуск №\d", self.article.text)
+        date_raw = re.search(r"\d{4} Выпуск №\d", self.article.text)
 
         # Only year is available, the № of issues per year doesn't correspond with months
         if date_raw:
@@ -174,10 +176,10 @@ class HTMLWithPDFParser:
 
 if __name__ == '__main__':
     # checking the environment
-    seed_urls, max_articles = validate_config(CRAWLER_CONFIG_PATH)
+    s_urls, all_articles = validate_config(CRAWLER_CONFIG_PATH)
 
     # initiating Crawler with PDF class instance and extract article links
-    crawler = PDFCrawler(seed_urls, max_articles)
+    crawler = PDFCrawler(s_urls, all_articles)
     crawler.find_articles()
 
     # extracting pdf, parsing pdf and saving text from every article link
