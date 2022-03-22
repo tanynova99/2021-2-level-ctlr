@@ -167,12 +167,11 @@ class HTMLParser:
         """
         Add meta information to Article class instance
         """
-        title = article_bs.find("h3", class_="article__title")
-        self.article.title = title.text
+        self.article.title = article_bs.find("h3").get_text()
 
-
-        authors = article_bs.find_all("a", class_="link link_const article__author")
-        self.article.author = authors.text
+        authors = article_bs.find_all("a", {"class": "link link_const article__author"})
+        for author in authors:
+            self.article.author.append(author.text)
 
         date_raw = re.search(r"\d{4} Выпуск №\d", self.article.text)
 
