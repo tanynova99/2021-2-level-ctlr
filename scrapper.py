@@ -12,7 +12,7 @@ import time
 import requests
 from bs4 import BeautifulSoup
 
-from constants import CRAWLER_CONFIG_PATH, DOMAIN, HEADERS
+from constants import ASSETS_PATH, CRAWLER_CONFIG_PATH, DOMAIN, HEADERS
 from core_utils.article import Article
 from core_utils.pdf_utils import PDFRawFile
 
@@ -105,16 +105,18 @@ def validate_config(crawler_path):
     if not urls:
         raise IncorrectURLError
 
-    if not isinstance(articles, int) or articles < 0:
+    if not isinstance(articles, int) or articles <= 0:
         raise IncorrectNumberOfArticlesError
 
-    if articles > 1000:
+    if articles > 100:
         raise NumberOfArticlesOutOfRangeError
 
     for url in urls:
         check = re.search(http_regex, url)
         if not check:
             raise IncorrectURLError
+
+    prepare_environment(ASSETS_PATH)
 
     return urls, articles
 
