@@ -171,9 +171,9 @@ class HTMLParser:
 
         authors = article_bs.find_all("a", {"class": "link link_const article__author"})
         for author in authors:
-            self.article.author.append(author.text)
+            self.article.author.append(author)
 
-        date_raw = re.search(r"\d{4} Выпуск №\d", self.article.text)
+        date_raw = re.search(r"\d{4} Выпуск №\d", article_bs)
 
         # Only year is available, the № of issues per year doesn't correspond with months
         if date_raw:
