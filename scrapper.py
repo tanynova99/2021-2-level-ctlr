@@ -49,11 +49,10 @@ class Crawler:
         """
         get link to the article
         """
-        urls = []
 
         for article_link in article_bs.find_all("a", {"class": "article__title"}):
             if len(self.urls) < self.max_articles:
-                urls.append(DOMAIN + article_link["href"])
+                self.urls.append(DOMAIN + article_link["href"])
 
     def find_articles(self):
         """
