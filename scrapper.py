@@ -173,7 +173,7 @@ class HTMLParser:
         for author in authors:
             self.article.author.append(author)
 
-        date_raw = re.search(r"\d{4} Выпуск №\d", article_bs)
+        date_raw = re.search(r'\d{4} Выпуск №\d', self.article.text)
 
         # Only year is available, the № of issues per year doesn't correspond with months
         if date_raw:
