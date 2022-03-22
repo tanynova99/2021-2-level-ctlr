@@ -159,7 +159,8 @@ class HTMLParser:
                 pdf_text = pdf_raw.get_text()
 
                 text_only = pdf_text.split('Список литературы')
-                self.article.text = ''.join(text_only[:-1])
+                self.article.text = text_only[0]
+
                 break
 
     def _fill_article_with_meta_information(self, article_bs):
@@ -168,6 +169,7 @@ class HTMLParser:
         """
         title = article_bs.find("h3", class_="article__title")
         self.article.title = title.text
+
 
         authors = article_bs.find_all("a", class_="link link_const article__author")
         self.article.author = authors.text
