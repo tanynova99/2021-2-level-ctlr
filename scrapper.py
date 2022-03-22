@@ -105,10 +105,10 @@ def validate_config(crawler_path):
     if not urls:
         raise IncorrectURLError
 
-    if not isinstance(articles, int):
+    if not isinstance(articles, int) or articles < 0:
         raise IncorrectNumberOfArticlesError
 
-    if articles > 1000 or articles < 0:
+    if articles > 1000:
         raise NumberOfArticlesOutOfRangeError
 
     for url in urls:
