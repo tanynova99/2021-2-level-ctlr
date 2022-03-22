@@ -77,7 +77,7 @@ class PDFCrawler:
         """
         Returns seed_urls param
         """
-        return self._seed_urls
+        return self.seed_urls
 
 
 def prepare_environment(base_path):
@@ -148,7 +148,7 @@ class HTMLWithPDFParser:
 
         for pdf in possible_pdfs:
             if "upload" in pdf["href"]:
-                pdf_raw = PDFRawFile(prf['href'], self.article_id)
+                pdf_raw = PDFRawFile(pdf['href'], self.article_id)
 
                 pdf_raw.download()
                 pdf_text = pdf_raw.get_text()
@@ -171,7 +171,7 @@ class HTMLWithPDFParser:
 
         # Only year is available, the № of issues per year doesn't correspond with months
         if date_raw:
-            self.article.date = datetime.datetime.strptime(date_raw.group(0)[:4], '%Y')
+            self.article.date = date_raw.datetime.strptime(date_raw.group(0)[:4], '%Y')
 
 
 if __name__ == '__main__':
