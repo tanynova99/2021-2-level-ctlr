@@ -69,7 +69,7 @@ class Crawler:
                 continue
 
             article_text = BeautifulSoup(response.text, features="html.parser")
-            self._extract_url(article_text)
+            self.urls.extend(self._extract_url(article_text))
             sleep_period = random.randrange(3, 7)
             time.sleep(sleep_period)
 
