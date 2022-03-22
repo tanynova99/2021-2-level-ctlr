@@ -1,3 +1,4 @@
 requests==2.27.1
 beautifulsoup4==4.10.0
 wget==3.2
+pymupdf==1.19.6

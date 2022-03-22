@@ -92,7 +92,7 @@ def prepare_environment(base_path):
 
 def validate_config(crawler_path):
     """
-    Validates given config
+    Validates config
     """
 
     with open(crawler_path) as file:
