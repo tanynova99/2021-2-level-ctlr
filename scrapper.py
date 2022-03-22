@@ -8,12 +8,11 @@ import random
 import re
 import shutil
 import time
-import urllib.parse
 
 import requests
 from bs4 import BeautifulSoup
 
-from constants import ASSETS_PATH, CRAWLER_CONFIG_PATH, DOMAIN, HEADERS
+from constants import CRAWLER_CONFIG_PATH, DOMAIN, HEADERS
 from core_utils.article import Article
 from core_utils.pdf_utils import PDFRawFile
 
@@ -51,6 +50,8 @@ class PDFCrawler:
         get link to the article
         """
         urls = []
+        url_count = len(self.urls)
+
         for article_link in article_bs.find_all("a", class_="article_title"):
             urls.append(''.join([DOMAIN, article_link.get("href")]))
 
@@ -184,7 +185,7 @@ if __name__ == '__main__':
 
     # extracting pdf, parsing pdf and saving text from every article link
     # stored in PDFCrawler instance
-    for i, url in enumerate(crawler.urls):
-        parser = HTMLWithPDFParser(url, i + 1)
+    for i, link in enumerate(crawler.urls):
+        parser = HTMLWithPDFParser(link, i + 1)
         article = parser.parse()
         article.save_raw()
