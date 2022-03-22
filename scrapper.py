@@ -51,8 +51,9 @@ class Crawler:
         """
         urls = []
 
-        for article_link in article_bs.find_all("a", class_="article_title"):
-            urls.append(''.join([DOMAIN, article_link.get("href")]))
+        for article_link in article_bs.find_all("a", {"class": "article_title"}):
+            if len(self.urls) < self.max_articles:
+                urls.append(DOMAIN + article_link["href"])
 
         return urls
 
@@ -70,6 +71,7 @@ class Crawler:
 
             article_text = BeautifulSoup(response.text, features="html.parser")
             self.urls.extend(self._extract_url(article_text))
+
             sleep_period = random.randrange(3, 7)
             time.sleep(sleep_period)
 
