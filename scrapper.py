@@ -168,7 +168,7 @@ class HTMLParser:
         self.article.title = article_bs.find(class_="article_title")
 
         authors = article_bs.find_all("a", class_="link link_const article__author")
-        self.article.author = authors["href"].text
+        self.article.author = authors.text
 
         date_raw = re.search(r"\d{4} Выпуск", article_bs.text)
 
