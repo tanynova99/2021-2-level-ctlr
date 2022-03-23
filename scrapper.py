@@ -150,7 +150,7 @@ class HTMLParser:
         """
         Scrap the text from PDF link embedded in article url
         """
-        possible_pdfs = article_bs.find_all("a", class_="article-panel__item button-icon", target_="_blank")
+        possible_pdfs = article_bs.find_all("a", class_="article-panel__item button-icon")
 
         for pdf in possible_pdfs:
             if ".pdf" in pdf["href"]:
@@ -172,7 +172,7 @@ class HTMLParser:
         for author in authors:
             self.article.author.append(author)
 
-        date_raw = article_bs.find(class_="page__title")
+        date_raw = article_bs.find(class_="page__title").text()
 
         # Only year is available, the № of issues per year doesn't correspond with months
         if date_raw:
