@@ -158,9 +158,8 @@ class HTMLParser:
 
                 pdf_raw.download()
                 pdf_text = pdf_raw.get_text()
-
-                text_only = pdf_text.split('Список литературы')
-                self.article.text = pdf_text
+                pdf_text = pdf_text.split("Список литературы")
+                self.article.text = pdf_text[0]
 
     def _fill_article_with_meta_information(self, article_bs):
         """
