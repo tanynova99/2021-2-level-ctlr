@@ -149,8 +149,7 @@ class HTMLParser:
         """
         Scrap the text from PDF link embedded in article url
         """
-        possible_pdfs = article_bs.find("a", class_="article-panel__item button-icon",
-                                        target_="_blank")
+        possible_pdfs = article_bs.find("a", class_="article-panel__item button-icon", target_="_blank")
 
         #for pdf in possible_pdfs:
         #if ".pdf" in pdf["href"]:
