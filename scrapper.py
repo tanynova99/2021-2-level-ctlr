@@ -162,6 +162,8 @@ class HTMLParser:
         else:
             self.article.text = "NOT FOUND"
 
+        self.article.text = pdf_text
+
     def _fill_article_with_meta_information(self, article_bs):
         """
         Add meta information to Article class instance
