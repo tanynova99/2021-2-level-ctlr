@@ -2,7 +2,6 @@
 Scrapper implementation
 """
 
-import datetime
 import json
 import pathlib
 import random
