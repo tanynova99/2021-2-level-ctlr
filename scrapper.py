@@ -149,18 +149,15 @@ class HTMLParser:
         """
         possible_pdfs = article_bs.find_all("a", class_="article-panel__item button-icon")
 
-        if possible_pdfs:
-            for pdf in possible_pdfs:
-                if ".pdf" in pdf.text:
-                    pdf_raw = PDFRawFile((DOMAIN + pdf.text), self.article_id)
+        for pdf in possible_pdfs:
+            if ".pdf" in pdf.text:
+                pdf_raw = PDFRawFile((DOMAIN + pdf.text), self.article_id)
 
-                    pdf_raw.download()
-                    pdf_text = pdf_raw.get_text()
+                pdf_raw.download()
+                pdf_text = pdf_raw.get_text()
 
-                    pdf_text_only = pdf_text.split("Список литературы")
-                    self.article.text = pdf_text_only[0]
-        else:
-            self.article.text = "NOT FOUND"
+                pdf_text = pdf_text.split("Список литературы")
+                self.article.text = pdf_text_only[0]
 
         self.article.text = pdf_text
 
