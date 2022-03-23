@@ -172,11 +172,13 @@ class HTMLParser:
         date_raw = re.search(r"(\d{4}) Выпуск №(\d)", article_bs.text)
         # Only year is available, the № of issues per year doesn't correspond with months
         # The year is divided into 4 parts then
+        # The time is fixed 00:00:00
         months = {"1": "01-01",
                   "2": "04-01",
                   "3": "08-01",
                   "4": "12-01"}
-        self.article.date = date_from_meta(date_raw.group(1) + "-" + months[date_raw.group(2)])
+        time_default = "00:00:00"
+        self.article.date = date_from_meta(" ".join((date_raw.group(1) + "-" + months[date_raw.group(2)]),time_default))
 
 
 if __name__ == '__main__':
