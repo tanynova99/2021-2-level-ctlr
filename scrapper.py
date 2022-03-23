@@ -157,8 +157,8 @@ class HTMLParser:
                     pdf_raw.download()
                     pdf_text = pdf_raw.get_text()
 
-                    pdf_text = pdf_text.split("Список литературы\n")
-                    self.article.text = pdf_text[0]
+                    pdf_text_only = pdf_text.split("Список литературы")
+                    self.article.text = pdf_text_only[0]
         else:
             self.article.text = "NOT FOUND"
 
