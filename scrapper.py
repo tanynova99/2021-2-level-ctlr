@@ -172,10 +172,10 @@ class HTMLParser:
         for author in authors:
             self.article.author.append(author)
 
-        date_raw = article_bs.find(class_="page__title").text()
+        date_raw = article_bs.find("h1", class_="page__title").text()
 
         # Only year is available, the № of issues per year doesn't correspond with months
-        if date_raw:
+        if date_raw != "":
             self.article.date = datetime.datetime.strptime(date_raw[:4], '%Y')
 
 
