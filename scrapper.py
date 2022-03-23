@@ -50,10 +50,8 @@ class Crawler:
         """
         get link to the article
         """
-
-        for article_link in article_bs.find_all("a", {"class": "article__title"}):
-            if len(self.urls) < self.max_articles:
-                self.urls.append(DOMAIN + article_link["href"])
+        for article_link in article_bs.find_all("a", class_="article__title"):
+            self.urls.append(DOMAIN + article_link["href"])
 
     def find_articles(self):
         """
@@ -69,8 +67,8 @@ class Crawler:
                 print("Request was unsuccessful.")
                 continue
 
-            article_bs = BeautifulSoup(response.text, features="html.parser")
-            self._extract_url(article_bs)
+            seed_bs = BeautifulSoup(response.text, features="html.parser")
+            self._extract_url(seed_bs)
 
 
 def get_search_urls(self):
@@ -154,7 +152,7 @@ class HTMLParser:
 
         for pdf in possible_pdfs:
             if ".pdf" in pdf:
-                pdf_raw = PDFRawFile((DOMAIN[:-9] + pdf), self.article_id)
+                pdf_raw = PDFRawFile((DOMAIN + pdf), self.article_id)
 
                 pdf_raw.download()
                 pdf_text = pdf_raw.get_text()
