@@ -165,10 +165,18 @@ class HTMLParser:
         """
         Add meta information to Article class instance
         """
-        self.article.title = article_bs.find(class_="article_title").get_text()
 
-        authors = article_bs.find("a", class_="link link_const article__author")
-        self.article.author = authors.text
+        title = article_bs.find(class_="article_title")
+        if title:
+            self.article.title = title.text
+        else:
+            self.article.title = "NOT FOUND"
+
+        author = article_bs.find("a", class_="link link_const article__author")
+        if author:
+            self.article.author = authors.text
+        else:
+            self.article.author = "NOT FOUND"
 
         date_raw = re.search(r"(\d{4}) Выпуск №(\d)", article_bs.text)
         # Only year is available, the № of issues per year doesn't correspond with months
