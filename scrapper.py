@@ -2,6 +2,7 @@
 Scrapper implementation
 """
 
+import datetime
 import json
 import pathlib
 import random
@@ -149,7 +150,7 @@ class HTMLParser:
         """
         Scrap the text from PDF link embedded in article url
         """
-        possible_pdfs = article_bs.find_all("a", class_ == "article-panel__item button-icon", target_="_blank")
+        possible_pdfs = article_bs.find_all("a", class_="article-panel__item button-icon", target_="_blank")
 
         for pdf in possible_pdfs:
             if ".pdf" in pdf["href"]:
