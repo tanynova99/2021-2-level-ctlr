@@ -176,7 +176,7 @@ class HTMLParser:
                   "2": "04-01",
                   "3": "08-01",
                   "4": "12-01"}
-        self.article.date = date_from_meta(date_raw.group(0) + "-" + months[date_raw.group(1)])
+        self.article.date = date_from_meta(date_raw.group(1) + "-" + months[date_raw.group(2)])
 
 
 if __name__ == '__main__':
