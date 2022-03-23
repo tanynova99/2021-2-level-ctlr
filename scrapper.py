@@ -149,19 +149,22 @@ class HTMLParser:
         """
         possible_pdfs = article_bs.find_all("a", class_="article-panel__item button-icon")
 
-        for pdf in possible_pdfs:
-            if pdf:
-                if ".pdf" in pdf.text:
-                    pdf_raw = PDFRawFile((DOMAIN + pdf.text), self.article_id)
+        if possible_pdfs:
+            for pdf in possible_pdfs:
+                if pdf:
+                    if ".pdf" in pdf.text:
+                        pdf_raw = PDFRawFile((DOMAIN + pdf.text), self.article_id)
 
-                    pdf_raw.download()
-                    pdf_text = pdf_raw.get_text()
+                        pdf_raw.download()
+                        pdf_text = pdf_raw.get_text()
 
-                    pdf_text = pdf_text.split("Список литературы")
-                    self.article.text = pdf_text[0]
-                    break
-            else:
-                self.article.text = "NOT FOUND"
+                        pdf_text = pdf_text.split("Список литературы")
+                        self.article.text = pdf_text[0]
+                        break
+                else:
+                    self.article.text = "NOT FOUND"
+        else:
+            self.article.text = "NOT FOUND"
 
     def _fill_article_with_meta_information(self, article_bs):
         """
