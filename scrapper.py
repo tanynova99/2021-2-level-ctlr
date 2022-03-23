@@ -153,13 +153,13 @@ class HTMLParser:
 
         for pdf in possible_pdfs:
             if ".pdf" in pdf["href"]:
-                pdf_raw = PDFRawFile(pdf['href'], self.article_id)
+                pdf_raw = PDFRawFile((DOMAIN[:-8]+pdf['href']), self.article_id)
 
                 pdf_raw.download()
                 pdf_text = pdf_raw.get_text()
 
                 text_only = pdf_text.split('Список литературы')
-                self.article.text = text_only[0]
+                self.article.text = ''.join(text_only[:-1])
 
                 break
 
@@ -173,7 +173,7 @@ class HTMLParser:
         for author in authors:
             self.article.author.append(author)
 
-        date_raw = re.search(r'\d{4} Выпуск №\d', self.article.text)
+        date_raw = re.search(r'\d{4} Выпуск', self.article.text)
 
         # Only year is available, the № of issues per year doesn't correspond with months
         if date_raw:
