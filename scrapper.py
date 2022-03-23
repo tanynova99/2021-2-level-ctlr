@@ -169,14 +169,14 @@ class HTMLParser:
         authors = article_bs.find("a", class_="link link_const article__author")
         self.article.author = authors.text
 
-        date_raw = re.search(r"\d{4}( Выпуск №)\d", article_bs.text)
+        date_raw = re.search(r"(\d{4}) Выпуск №(\d)", article_bs.text)
         # Only year is available, the № of issues per year doesn't correspond with months
         # The year is divided into 4 parts then
         months = {"1": "01-01",
                   "2": "04-01",
                   "3": "08-01",
                   "4": "12-01"}
-        self.article.date = date_from_meta(date_raw.group(0) + "-" + months[date_raw.group(2)])
+        self.article.date = date_from_meta(date_raw.group(0) + "-" + months[date_raw.group(1)])
 
 
 if __name__ == '__main__':
