@@ -154,7 +154,7 @@ class HTMLParser:
 
         for pdf in possible_pdfs:
             if ".pdf" in pdf["href"]:
-                pdf_raw = PDFRawFile(pdf['href'], self.article_id)
+                pdf_raw = PDFRawFile(("https://journals.kantiana.ru" + pdf['href']), self.article_id)
 
                 pdf_raw.download()
                 pdf_text = pdf_raw.get_text()
