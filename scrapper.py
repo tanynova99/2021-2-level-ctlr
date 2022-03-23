@@ -151,18 +151,14 @@ class HTMLParser:
 
         if possible_pdfs:
             for pdf in possible_pdfs:
-                if pdf:
-                    if ".pdf" in pdf.text:
-                        pdf_raw = PDFRawFile((DOMAIN + pdf.text), self.article_id)
+                if ".pdf" in pdf.text:
+                    pdf_raw = PDFRawFile((DOMAIN + pdf.text), self.article_id)
 
-                        pdf_raw.download()
-                        pdf_text = pdf_raw.get_text()
+                    pdf_raw.download()
+                    pdf_text = pdf_raw.get_text()
 
-                        pdf_text = pdf_text.split("Список литературы")
-                        self.article.text = pdf_text[0]
-                        break
-                else:
-                    self.article.text = "NOT FOUND"
+                    pdf_text = pdf_text.split("Список литературы\n")
+                    self.article.text = pdf_text[0]
         else:
             self.article.text = "NOT FOUND"
 
