@@ -150,17 +150,18 @@ class HTMLParser:
         """
         Scrap the text from PDF link embedded in article url
         """
-        possible_pdfs = article_bs.find("h3", class_="article-panel__item button-icon").text
+        possible_pdfs = article_bs.find("a", class_="article-panel__item button-icon").text
 
         for pdf in possible_pdfs:
-            if ".pdf" in pdf["href"]:
-                pdf_request = requests.get(pdf["href"], headers=HEADERS)
-                pdf_raw = PDFRawFile(pdf_request, self.article_id)
+            if ".pdf" in pdf:
+                pdf_raw = PDFRawFile((DOMAIN[:-9] + pdf), self.article_id)
 
                 pdf_raw.download()
                 pdf_text = pdf_raw.get_text()
+
                 pdf_text = pdf_text.split("Список литературы")
                 self.article.text = pdf_text[0]
+                break
 
     def _fill_article_with_meta_information(self, article_bs):
         """
