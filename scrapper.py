@@ -149,17 +149,17 @@ class HTMLParser:
         """
         Scrap the text from PDF link embedded in article url
         """
-        possible_pdfs = article_bs.find_all("a", {"class": "article-panel__item button-icon"})
+        possible_pdfs = article_bs.find("a", class_="article-panel__item button-icon",
+                                        target_="_blank")
 
-        for pdf in possible_pdfs:
-            if ".pdf" in pdf["href"]:
-                pdf_raw = PDFRawFile((DOMAIN[:-8] + pdf['href']), self.article_id)
+        #for pdf in possible_pdfs:
+        #if ".pdf" in pdf["href"]:
+        pdf_raw = PDFRawFile((DOMAIN[:-8] + possible_pdfs['href']), self.article_id)
 
-                pdf_raw.download()
-                pdf_text = pdf_raw.get_text()
-
-                text_only = pdf_text.split('Список литературы')
-                self.article.text = ''.join(text_only[:-1])
+        pdf_raw.download()
+        pdf_text = pdf_raw.get_text()
+        pdf_text = pdf_text.split('Список литературы')
+        self.article.text = pdf_text[:-1]
 
     def _fill_article_with_meta_information(self, article_bs):
         """
@@ -167,15 +167,15 @@ class HTMLParser:
         """
         self.article.title = article_bs.find(class_="article_title")
 
-        authors = article_bs.find_all("a", {"class": "link link_const article__author"})
+        authors = article_bs.find_all("a", class_=:"link link_const article__author")
         for author in authors:
             self.article.author.append(author)
 
-        date_raw = re.search(r"\d{4} Выпуск", self.article.text)
+        date_raw = article_bs.find(class_="page__title")
 
         # Only year is available, the № of issues per year doesn't correspond with months
         if date_raw:
-            self.article.date = date_raw.datetime.strptime(date_raw.group(0)[:4], '%Y')
+            self.article.date = date_raw.datetime.strptime(date_raw[:4], '%Y')
 
 
 if __name__ == '__main__':
