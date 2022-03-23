@@ -137,7 +137,7 @@ class HTMLParser:
         """
         filling the class Article instance
         """
-        response = requests.get(self.article_url)
+        response = requests.get(self.article_url, HEADERS)
         article_bs = BeautifulSoup(response.text, 'html.parser')
 
         self._fill_article_with_text(article_bs)
