@@ -161,7 +161,6 @@ class HTMLParser:
                 text_only = pdf_text.split('Список литературы')
                 self.article.text = ''.join(text_only[:-1])
 
-                break
 
     def _fill_article_with_meta_information(self, article_bs):
         """
