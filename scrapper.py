@@ -13,7 +13,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from constants import ASSETS_PATH, CRAWLER_CONFIG_PATH, DOMAIN, HEADERS
-from core_utils.article import Article
+from core_utils.article import Article, date_from_meta
 from core_utils.pdf_utils import PDFRawFile
 
 
@@ -176,7 +176,7 @@ class HTMLParser:
                   "2": "04-01",
                   "3": "08-01",
                   "4": "12-01"}
-        self.article.date = date_raw[:4] + "-" + months[date_raw[-1]]
+        self.article.date = date_from_meta(date_raw[:4] + "-" + months[date_raw[-1]])
 
 
 if __name__ == '__main__':
