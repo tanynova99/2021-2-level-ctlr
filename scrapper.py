@@ -178,7 +178,8 @@ class HTMLParser:
                   "3": "08-01",
                   "4": "12-01"}
         time_default = "00:00:00"
-        self.article.date = date_from_meta(" ".join((date_raw.group(1) + "-" + months[date_raw.group(2)]),time_default))
+        date_no_t = " ".join(date_raw.group(1) + "-" + months[date_raw.group(2)])
+        self.article.date = date_from_meta(date_no_t + time_default)
 
 
 if __name__ == '__main__':
