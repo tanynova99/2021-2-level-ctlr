@@ -147,24 +147,25 @@ class HTMLParser:
         """
         Scrap the text from PDF link embedded in article url
         """
-        possible_pdfs = article_bs.find("a", class_="article-panel__item button-icon").text
+        possible_pdfs = article_bs.find_all("a", class_="article-panel__item button-icon")
 
         for pdf in possible_pdfs:
-            if ".pdf" in pdf:
-                pdf_raw = PDFRawFile((DOMAIN + pdf), self.article_id)
+            if pdf:
+                if ".pdf" in pdf.text:
+                    pdf_raw = PDFRawFile((DOMAIN + pdf.text), self.article_id)
 
-                pdf_raw.download()
-                pdf_text = pdf_raw.get_text()
+                    pdf_raw.download()
+                    pdf_text = pdf_raw.get_text()
 
-                pdf_text = pdf_text.split("Список литературы")
-                self.article.text = pdf_text[0]
-                break
+                    pdf_text = pdf_text.split("Список литературы")
+                    self.article.text = pdf_text[0]
+                    break
 
     def _fill_article_with_meta_information(self, article_bs):
         """
         Add meta information to Article class instance
         """
-        self.article.title = article_bs.find(class_="article_title")
+        self.article.title = article_bs.find(class_="article_title").text
 
         authors = article_bs.find("a", class_="link link_const article__author")
         self.article.author = authors.text
