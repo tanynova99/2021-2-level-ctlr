@@ -153,7 +153,7 @@ class HTMLParser:
 
         for pdf in possible_pdfs:
             if ".pdf" in pdf["href"]:
-                pdf_raw = PDFRawFile((DOMAIN[:-8]+pdf['href']), self.article_id)
+                pdf_raw = PDFRawFile((DOMAIN[:-8] + pdf['href']), self.article_id)
 
                 pdf_raw.download()
                 pdf_text = pdf_raw.get_text()
@@ -161,18 +161,17 @@ class HTMLParser:
                 text_only = pdf_text.split('Список литературы')
                 self.article.text = ''.join(text_only[:-1])
 
-
     def _fill_article_with_meta_information(self, article_bs):
         """
         Add meta information to Article class instance
         """
-        self.article.title = article_bs.find("h3")
+        self.article.title = article_bs.find(class_="article_title")
 
         authors = article_bs.find_all("a", {"class": "link link_const article__author"})
         for author in authors:
             self.article.author.append(author)
 
-        date_raw = re.search(r'\d{4} Выпуск', self.article.text)
+        date_raw = re.search(r"\d{4} Выпуск", self.article.text)
 
         # Only year is available, the № of issues per year doesn't correspond with months
         if date_raw:
