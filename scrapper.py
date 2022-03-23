@@ -174,7 +174,7 @@ class HTMLParser:
 
         author = article_bs.find("a", class_="link link_const article__author")
         if author:
-            self.article.author = authors.text
+            self.article.author = author.text
         else:
             self.article.author = "NOT FOUND"
 
