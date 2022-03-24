@@ -66,7 +66,7 @@ class Crawler:
                 print("Request was unsuccessful.")
                 continue
 
-            seed_bs = BeautifulSoup(response.text, features="html.parser",  from_encoding=response.encoding)
+            seed_bs = BeautifulSoup(response.text, features="html.parser")
             self._extract_url(seed_bs)
 
 
@@ -136,7 +136,7 @@ class HTMLParser:
         filling the class Article instance
         """
         response = requests.get(self.article_url, HEADERS)
-        article_bs = BeautifulSoup(response.text, 'html.parser', from_encoding=response.encoding)
+        article_bs = BeautifulSoup(response.text, 'html.parser')
 
         self._fill_article_with_text(article_bs)
         self._fill_article_with_meta_information(article_bs)
