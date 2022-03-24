@@ -158,18 +158,18 @@ class HTMLParser:
 
             if ".pdf" in pdf["href"]:
 
-            pdf_raw = PDFRawFile(DOMAIN + pdf["href"], self.article_id)
+                pdf_raw = PDFRawFile(DOMAIN + pdf["href"], self.article_id)
 
-            pdf_raw.download()
-            pdf_text = pdf_raw.get_text()
+                pdf_raw.download()
+                pdf_text = pdf_raw.get_text()
 
-            splitters = ["Список литературы", "Список источников и литературы"]
+                splitters = ["Список литературы", "Список источников и литературы"]
 
-            for splitter in splitters:
-                if splitter in pdf_text:
-                    pdf_text = pdf_text.split(splitter)
-                    self.article.text = "".join(pdf_text[:-1])
-                    break
+                for splitter in splitters:
+                    if splitter in pdf_text:
+                        pdf_text = pdf_text.split(splitter)
+                        self.article.text = "".join(pdf_text[:-1])
+                        break
 
     def _fill_article_with_meta_information(self, article_bs):
         """
