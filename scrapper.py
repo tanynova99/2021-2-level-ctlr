@@ -162,7 +162,7 @@ class HTMLParser:
 
                     if splitter in pdf_text:
                         pdf_text = pdf_text.split(splitter)
-                        self.article.text = pdf_text[:-1]
+                        self.article.text = "".join(pdf_text[:-1])
 
                     break
 
