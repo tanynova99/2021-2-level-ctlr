@@ -161,8 +161,8 @@ class HTMLParser:
                 for splitter in splitters:
 
                     if splitter in pdf_text:
-                    pdf_text = pdf_text.split(splitter)
-                    self.article.text = pdf_text[:-1]
+                        pdf_text = pdf_text.split(splitter)
+                        self.article.text = pdf_text[:-1]
 
                     break
 
