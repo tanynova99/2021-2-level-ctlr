@@ -161,17 +161,12 @@ class HTMLParser:
 
                 break
 
-
     def _fill_article_with_meta_information(self, article_bs):
         """
         Add meta information to Article class instance
         """
 
-        title = article_bs.find(class_="article_title")
-        if title:
-            self.article.title = title.text
-        else:
-            self.article.title = "NOT FOUND"
+        title = article_bs.find("h3", class_="article_title").text
 
         author = article_bs.find("a", class_="link link_const article__author")
         if author:
