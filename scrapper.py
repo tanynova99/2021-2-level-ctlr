@@ -3,14 +3,14 @@ Scrapper implementation
 """
 
 import json
-import pathlib
 import random
 import re
 import shutil
+import pathlib
 import time
 
-import requests
 from bs4 import BeautifulSoup
+import requests
 
 from constants import ASSETS_PATH, CRAWLER_CONFIG_PATH, DOMAIN, HEADERS
 from core_utils.article import Article, date_from_meta
@@ -44,6 +44,7 @@ class Crawler:
         self.seed_urls = seed_urls
         self.max_articles = max_articles
         self.urls = []
+        self.collected_article_urls = 0
 
     def _extract_url(self, article_bs):
         """
@@ -51,6 +52,7 @@ class Crawler:
         """
         for article_link in article_bs.find_all("a", class_="article__title"):
             self.urls.append(DOMAIN + article_link["href"])
+            self.collected_article_urls += 1
 
     def find_articles(self):
         """
@@ -69,12 +71,11 @@ class Crawler:
             seed_bs = BeautifulSoup(response.text, features="html.parser")
             self._extract_url(seed_bs)
 
-
-def get_search_urls(self):
-    """
-    Returns seed_urls param
-    """
-    return self.seed_urls
+    def get_search_urls(self):
+        """
+        Returns seed_urls param
+        """
+        return self.seed_urls
 
 
 def prepare_environment(base_path):
@@ -98,9 +99,14 @@ def validate_config(crawler_path):
     with open(crawler_path) as file:
         config = json.load(file)
 
+    if 'total_articles_to_find_and_parse' not in crawler_config:
+        raise IncorrectNumberOfArticlesError
+
+    if 'seed_urls' not in crawler_config:
+        raise IncorrectURLError
+
     urls = config["seed_urls"]
     articles = config["total_articles_to_find_and_parse"]
-    http_regex = r"http[s]?://journals\.kantiana\.ru/."
 
     if not urls:
         raise IncorrectURLError
@@ -112,11 +118,9 @@ def validate_config(crawler_path):
         raise NumberOfArticlesOutOfRangeError
 
     for url in urls:
-        check = re.search(http_regex, url)
+        check = re.search(DOMAIN, url)
         if not check:
             raise IncorrectURLError
-
-    prepare_environment(ASSETS_PATH)
 
     return urls, articles
 
@@ -145,7 +149,7 @@ class HTMLParser:
 
         for check in validity_checks:
 
-            if ".pdf" not in pdf["href"]:
+            if ".pdf" not in check["href"]:
                 continue
 
             self._fill_article_with_text(article_bs)
@@ -208,6 +212,9 @@ if __name__ == '__main__':
     # initiating Crawler with PDF class instance and extract article links
     crawler = Crawler(s_urls, all_articles)
     crawler.find_articles()
+
+    if crawler.collected_article_urls < crawler.max_articles:
+        print("Not enough articles were collected!!!")
 
     # extracting pdf, parsing pdf and saving text from every article link
     # stored in Crawler instance
