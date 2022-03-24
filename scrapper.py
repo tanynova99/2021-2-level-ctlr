@@ -156,6 +156,8 @@ class HTMLParser:
                 pdf_raw.download()
                 pdf_text = pdf_raw.get_text()
 
+                to_split_by = "Список литературы / Список источников и литературы"
+
                 pdf_text = pdf_text.split("Список литературы")
                 self.article.text = "".join(pdf_text[:-1])
 
@@ -171,7 +173,7 @@ class HTMLParser:
         author = article_bs.find("a", class_="link link_const article__author")
         self.article.author = author.text
 
-        date_raw = re.search(r"(\d{4}) Выпуск №(\d)", article_bs.text)
+        date_raw = re.search(r"(\d{4}) Выпуск №(\d{1-2})", article_bs.text)
         # Only year is available, the № of issues per year doesn't correspond with months
         # The year is divided into 4 parts then
         # The time is fixed 00:00:00
