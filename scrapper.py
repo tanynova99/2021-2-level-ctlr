@@ -119,6 +119,7 @@ def validate_config(crawler_path):
 
     for url in urls:
         check = re.search(DOMAIN, url)
+
         if not check:
             raise IncorrectURLError
 
