@@ -160,6 +160,7 @@ class HTMLParser:
             pdf_text = pdf_raw.get_text()
 
             splitters = ["Список литературы", "Список источников и литературы"]
+
             for splitter in splitters:
                 if splitter in pdf_text:
                     pdf_text = pdf_text.split(splitter)
