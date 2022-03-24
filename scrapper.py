@@ -59,7 +59,7 @@ class Crawler:
 
         for seed_url in self.seed_urls:
             response = requests.get(seed_url, headers=HEADERS)
-            sleep_period = random.randrange(1, 5)
+            sleep_period = random.randrange(1, 3)
             time.sleep(sleep_period)
 
             if not response.ok:
