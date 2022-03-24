@@ -99,10 +99,10 @@ def validate_config(crawler_path):
     with open(crawler_path) as file:
         config = json.load(file)
 
-    if 'total_articles_to_find_and_parse' not in crawler_config:
+    if 'total_articles_to_find_and_parse' not in config:
         raise IncorrectNumberOfArticlesError
 
-    if 'seed_urls' not in crawler_config:
+    if 'seed_urls' not in config:
         raise IncorrectURLError
 
     urls = config["seed_urls"]
