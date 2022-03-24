@@ -187,6 +187,7 @@ class HTMLParser:
 if __name__ == '__main__':
     # checking the environment
     s_urls, all_articles = validate_config(CRAWLER_CONFIG_PATH)
+    prepare_environment(ASSETS_PATH)
 
     # initiating Crawler with PDF class instance and extract article links
     crawler = Crawler(s_urls, all_articles)
