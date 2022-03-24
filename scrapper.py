@@ -136,7 +136,7 @@ class HTMLParser:
         filling the class Article instance
         """
         response = requests.get(self.article_url, HEADERS)
-        article_bs = BeautifulSoup(response.text, 'html.parser')
+        article_bs = BeautifulSoup(response.text, 'html.parser', from_encoding=response.encoding)
 
         self._fill_article_with_text(article_bs)
         self._fill_article_with_meta_information(article_bs)
@@ -148,9 +148,6 @@ class HTMLParser:
         Scrap the text from PDF link embedded in article url
         """
         possible_pdfs = article_bs.find_all("a", class_="article-panel__item button-icon")[1]
-
-#        for pdf in possible_pdfs:
-#            if ".pdf" in pdf.text:
 
         pdf_raw = PDFRawFile(possible_pdfs["href"], self.article_id)
 
