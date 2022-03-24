@@ -169,7 +169,7 @@ class HTMLParser:
                     break
 
 
-def _fill_article_with_meta_information(self, article_bs):
+    def _fill_article_with_meta_information(self, article_bs):
         """
         Add meta information to Article class instance
         """
