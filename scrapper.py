@@ -166,7 +166,7 @@ class HTMLParser:
         Add meta information to Article class instance
         """
 
-        self.article.title = article_bs.find("h3", class_="article_title").text
+        self.article.title = article_bs.find("h3", class_="article__title").text
 
         author = article_bs.find("a", class_="link link_const article__author")
         self.article.author = author.text
