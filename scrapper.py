@@ -150,22 +150,26 @@ class HTMLParser:
         possible_pdfs = article_bs.find_all("a", class_="article-panel__item button-icon")
 
         for pdf in possible_pdfs:
-            if ".pdf" in pdf["href"]:
-                pdf_raw = PDFRawFile(DOMAIN + pdf["href"], self.article_id)
 
-                pdf_raw.download()
-                pdf_text = pdf_raw.get_text()
+            if ".pdf" not in pdf["href"]:
+                continue
 
-                splitters = ["Список литературы", "Список источников и литературы"]
+            pdf_raw = PDFRawFile(DOMAIN + pdf["href"], self.article_id)
 
-                for splitter in splitters:
-                    if splitter in pdf_text:
-                        pdf_text = pdf_text.split(splitter)
-                        self.article.text = "".join(pdf_text[:-1])
+            pdf_raw.download()
+            pdf_text = pdf_raw.get_text()
 
-                        break
+            splitters = ["Список литературы", "Список источников и литературы"]
 
-    def _fill_article_with_meta_information(self, article_bs):
+            for splitter in splitters:
+                if splitter in pdf_text:
+                    pdf_text = pdf_text.split(splitter)
+                    self.article.text = "".join(pdf_text[:-1])
+
+                    break
+
+
+def _fill_article_with_meta_information(self, article_bs):
         """
         Add meta information to Article class instance
         """
