@@ -66,7 +66,7 @@ class Crawler:
                 print("Request was unsuccessful.")
                 continue
 
-            seed_bs = BeautifulSoup(response.text, features="html.parser")
+            seed_bs = BeautifulSoup(response.text, features="html.parser",  from_encoding=response.encoding)
             self._extract_url(seed_bs)
 
 
