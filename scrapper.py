@@ -162,6 +162,7 @@ class HTMLParser:
                     if splitter in pdf_text:
                         pdf_text = pdf_text.split(splitter)
                         self.article.text = "".join(pdf_text[:-1])
+
                         break
 
     def _fill_article_with_meta_information(self, article_bs):
