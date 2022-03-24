@@ -138,10 +138,20 @@ class HTMLParser:
         response = requests.get(self.article_url, HEADERS)
         article_bs = BeautifulSoup(response.text, 'html.parser')
 
-        self._fill_article_with_text(article_bs)
-        self._fill_article_with_meta_information(article_bs)
+        # some links 'Скачать статью' lead to the same page
+        # there is no link to the article
 
-        return self.article
+        validity_checks = article_bs.find_all("a", class_="article-panel__item button-icon")
+
+        for check in validity_checks:
+
+            if ".pdf" not in pdf["href"]:
+                continue
+
+            self._fill_article_with_text(article_bs)
+            self._fill_article_with_meta_information(article_bs)
+
+            return self.article
 
     def _fill_article_with_text(self, article_bs):
         """
