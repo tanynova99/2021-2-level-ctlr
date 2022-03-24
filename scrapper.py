@@ -95,7 +95,6 @@ def validate_config(crawler_path):
     """
     Validates config
     """
-
     with open(crawler_path) as file:
         config = json.load(file)
 
