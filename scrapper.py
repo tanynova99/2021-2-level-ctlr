@@ -157,7 +157,7 @@ class HTMLParser:
                 pdf_text = pdf_raw.get_text()
 
                 pdf_text = pdf_text.split("Список литературы")
-                self.article.text = pdf_text[:-1]
+                self.article.text = "".join(pdf_text[:-1])
 
                 break
 
