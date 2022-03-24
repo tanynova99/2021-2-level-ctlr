@@ -149,7 +149,7 @@ class HTMLParser:
         """
         possible_pdfs = article_bs.find_all("a", class_="article-panel__item button-icon")[1]
 
-        pdf_raw = PDFRawFile(possible_pdfs["href"], self.article_id)
+        pdf_raw = PDFRawFile(DOMAIN + possible_pdfs["href"], self.article_id)
 
         pdf_raw.download()
         pdf_text = pdf_raw.get_text()
