@@ -199,22 +199,6 @@ class HTMLParser:
         date_no_t = date_raw.group(1) + "-" + months[date_raw.group(2)]
         self.article.date = date_from_meta(date_no_t + time_default)
 
-        """
-        TASK - number of pages and references
-        
-        print("\n\nTASK")
-
-        references = article_bs.find_all(class_="article__abstract")
-        children = references[1].findChildren("p")
-        if len(children) == 0:
-            children = references[1].text.split("\n\r")
-
-        print("references", len(children))
-
-        pages = article_bs.find("dd").text.split("-")
-        print("pages", abs(int(pages[0]) - int(pages[1])) + 1)
-        """
-
 
 if __name__ == '__main__':
     # checking the environment
