@@ -201,7 +201,7 @@ class HTMLParser:
 
         """
         TASK - number of pages and references
-        """
+        
         print("\n\nTASK")
 
         references = article_bs.find_all(class_="article__abstract")
@@ -213,6 +213,7 @@ class HTMLParser:
 
         pages = article_bs.find("dd").text.split("-")
         print("pages", abs(int(pages[0]) - int(pages[1])) + 1)
+        """
 
 
 if __name__ == '__main__':
