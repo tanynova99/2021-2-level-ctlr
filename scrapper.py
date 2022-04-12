@@ -3,11 +3,11 @@ Scrapper implementation
 """
 
 import json
+import pathlib
 import random
 import re
-import shutil
-import pathlib
 import time
+import shutil
 
 from bs4 import BeautifulSoup
 import requests
@@ -35,6 +35,10 @@ class IncorrectNumberOfArticlesError(Exception):
     """
 
 
+class NotEnoughArticlesCollected(Exception):
+    pass
+
+
 class Crawler:
     """
     Crawler implementation
@@ -51,8 +55,9 @@ class Crawler:
         get link to the article
         """
         for article_link in article_bs.find_all("a", class_="article__title"):
-            self.urls.append(DOMAIN + article_link["href"])
-            self.collected_article_urls += 1
+            if self.collected_article_urls < self.max_articles:
+                self.urls.append(DOMAIN + article_link["href"])
+                self.collected_article_urls += 1
 
     def find_articles(self):
         """
@@ -169,6 +174,7 @@ class HTMLParser:
                     if splitter in pdf_text:
                         pdf_text = pdf_text.split(splitter)
                         self.article.text = "".join(pdf_text[:-1])
+
                         break
 
     def _fill_article_with_meta_information(self, article_bs):
@@ -204,7 +210,7 @@ if __name__ == '__main__':
     crawler.find_articles()
 
     if crawler.collected_article_urls < crawler.max_articles:
-        print("Not enough articles were collected!!!")
+        raise NotEnoughArticlesCollected
 
     # extracting pdf, parsing pdf and saving text from every article link
     # stored in Crawler instance
