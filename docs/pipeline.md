@@ -146,6 +146,8 @@ def validate_dataset(dataset_path):
 method with passing a global variable `ASSETS_PATH` that should be properly
 imported from the `constants.py` module.
 
+> NOTE: in order to operate paths, it is required to use `pathlib` module
+
 Example call:
 
 ```python
@@ -186,6 +188,8 @@ corresponding names. Each instance should also have an
 additional attribute `self._storage` of a dictionary type and filled with
 information about the files. For filling instructions read more in the next
 stage (Stage 2.2).
+
+> NOTE: remember to use `pathlib` to create file path object
 
 #### Stage 2.2 Implement method for filling files storage
 
@@ -507,12 +511,10 @@ For visualization, you need to use `visualize` method from `visualizer.py` modul
 in the root folder of the project. Sample usage:
 
 ```python
-visualize(statistics=frequencies_dict, path_to_save='./tmp/articles/1_image.png')
+visualize(statistics=frequencies_dict, path_to_save=ASSETS_PATH / '1_image.png')
 ```
 
-#### Stage 8.3. Refactor your own code to use `pathlib`
-
-> NOTE: !!! `pathlib` to be used from early beginning !!!
+#### Stage 8.3. Ensure you only use `pathlib` to work with file paths
 
 As we discussed during lectures it is always better to have something designed specifically for the
 given task. Comparing `os` and `pathlib` modules, the latter is the one that is designed for most of

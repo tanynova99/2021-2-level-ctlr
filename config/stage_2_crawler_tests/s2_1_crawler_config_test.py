@@ -1,33 +1,57 @@
+"""
+Crawler configuration validation
+"""
+
 import json
+import unittest
 
 import pytest
 
-import scrapper
-import unittest
 from constants import CRAWLER_CONFIG_PATH
-from config.test_params import TEST_PATH, TEST_CRAWLER_CONFIG_PATH
-from scrapper import IncorrectURLError, IncorrectNumberOfArticlesError, NumberOfArticlesOutOfRangeError
+from config.test_params import TEST_CRAWLER_CONFIG_PATH
 from config.stage_2_crawler_tests.config_generator import generate_config
+import scrapper
+from scrapper import (IncorrectURLError,
+                      IncorrectNumberOfArticlesError,
+                      NumberOfArticlesOutOfRangeError)
 
 
 print("Stage 1A: Validating Crawler Config")
 print("Starting tests with received config")
 
 
+class ExceptionIsNotRaised(Exception):
+    """
+    No exception was raised
+    """
+
+
 class ExtendedTestCase(unittest.TestCase):
+    """
+    Enable messaging when assertRaises is triggered
+    """
+    # pylint: disable=invalid-name
     def assertRaisesWithMessage(self, msg, exception, func, *args, **kwargs):
+        """
+        assertRaises method counterpart with enabled messaging
+        """
         try:
             func(*args, **kwargs)
             print(msg)
-            self.assertFail()
-        except Exception as inst:
-            self.assertEqual(type(inst), exception)
+            raise ExceptionIsNotRaised
+        except ExceptionIsNotRaised:
+            raise AssertionError(msg) from ExceptionIsNotRaised
+        except Exception as inst: # pylint: disable=broad-except
+            self.assertEqual(type(inst), exception, msg)
 
 
 class CrawlerConfigCheck(ExtendedTestCase):
+    """
+    A class for Crawler configuration validation
+    """
     def setUp(self) -> None:
-        with CRAWLER_CONFIG_PATH.open() as f:
-            self.reference = json.load(f)
+        with CRAWLER_CONFIG_PATH.open() as file:
+            self.reference = json.load(file)
 
     @pytest.mark.mark4
     @pytest.mark.mark6
@@ -40,9 +64,8 @@ class CrawlerConfigCheck(ExtendedTestCase):
         """
         generate_config(seed_urls='https://sample.com/',
                         num_articles=self.reference['total_articles_to_find_and_parse'])
-
-        error_message = """Checking that scrapper can handle incorrect seed_urls inputs. 
-                            Seed URLs must be a list of strings, not a single string"""
+        error_message = """Checking that scrapper can handle incorrect seed_urls inputs.
+Seed URLs must be a list of strings, not a single string"""
         self.assertRaisesWithMessage(error_message,
                                      IncorrectURLError,
                                      scrapper.validate_config,
@@ -51,8 +74,8 @@ class CrawlerConfigCheck(ExtendedTestCase):
         generate_config(seed_urls=[],
                         num_articles=self.reference['total_articles_to_find_and_parse'])
 
-        error_message = """Checking that scrapper can handle incorrect seed_urls inputs. 
-                            A list of seed URLs must not be empty"""
+        error_message = "Checking that scrapper can handle incorrect seed_urls inputs. " \
+                        "A list of seed URLs must not be empty"
         self.assertRaisesWithMessage(error_message,
                                      IncorrectURLError,
                                      scrapper.validate_config,
@@ -61,8 +84,8 @@ class CrawlerConfigCheck(ExtendedTestCase):
         generate_config(seed_urls=['plain text', 1],
                         num_articles=self.reference['total_articles_to_find_and_parse'])
 
-        error_message = """Checking that scrapper can handle incorrect seed_urls inputs. 
-                           Real URLs always follow https:// pattern or similar"""
+        error_message = "Checking that scrapper can handle incorrect seed_urls inputs. " \
+                        "Real URLs always follow https:// pattern or similar"
         self.assertRaisesWithMessage(error_message,
                                      IncorrectURLError,
                                      scrapper.validate_config,
@@ -99,8 +122,11 @@ class CrawlerConfigCheck(ExtendedTestCase):
         generate_config(seed_urls=self.reference['seed_urls'],
                         num_articles='plain text')
 
-        error_message = """Checking that scrapper can handle incorrect total_articles_to_find_and_parse inputs. 
-                           Number of articles parameter must be an integer for scrapper to work"""
+        error_message = "Checking that scrapper can handle incorrect " \
+                        "total_articles_to_find_and_parse inputs. Number " \
+                        "of articles parameter must be an integer for scrapper to work"
+        # self.assertRaises(IncorrectNumberOfArticlesError, scrapper.validate_config,
+        #                   TEST_CRAWLER_CONFIG_PATH, msg=error_message)
         self.assertRaisesWithMessage(error_message,
                                      IncorrectNumberOfArticlesError,
                                      scrapper.validate_config,
@@ -109,8 +135,10 @@ class CrawlerConfigCheck(ExtendedTestCase):
         generate_config(seed_urls=self.reference['seed_urls'],
                         num_articles=0)
 
-        error_message = """Checking that scrapper can handle incorrect total_articles_to_find_and_parse inputs. 
-                           Number of articles parameter must be a positive integer value for scrapper to work"""
+        error_message = "Checking that scrapper can handle " \
+                        "incorrect total_articles_to_find_and_parse inputs. " \
+                        "Number of articles parameter must be a positive " \
+                        "integer value for scrapper to work"
         self.assertRaisesWithMessage(error_message,
                                      IncorrectNumberOfArticlesError,
                                      scrapper.validate_config,
@@ -128,11 +156,14 @@ class CrawlerConfigCheck(ExtendedTestCase):
         generate_config(seed_urls=self.reference['seed_urls'],
                         num_articles=self.reference['total_articles_to_find_and_parse'])
 
-        error_message = """Checking that validate config returns exclusively the values from config file"""
+        error_message = "Checking that validate config returns " \
+                        "exclusively the values from config file"
 
         self.assertTrue(scrapper.validate_config(TEST_CRAWLER_CONFIG_PATH) in
-                        [(self.reference['seed_urls'], self.reference['total_articles_to_find_and_parse']),
-                         (self.reference['total_articles_to_find_and_parse'], self.reference['seed_urls'])],
+                        [(self.reference['seed_urls'],
+                          self.reference['total_articles_to_find_and_parse']),
+                         (self.reference['total_articles_to_find_and_parse'],
+                          self.reference['seed_urls'])],
                         error_message)
 
 

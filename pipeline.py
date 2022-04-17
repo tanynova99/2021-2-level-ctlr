@@ -21,7 +21,10 @@ class NotDirectoryError(Exception):
 
 class InconsistentDatasetError(Exception):
     """
-    Corrupt data: numeration is expected to start from 1 and to be continuous
+    Corrupt data:
+        - numeration is expected to start from 1 and to be continuous
+        - a number of text files must be equal to the number of meta files
+        - text files must not be empty
     """
 
 

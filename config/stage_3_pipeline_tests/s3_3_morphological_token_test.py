@@ -1,3 +1,6 @@
+"""
+Tests for MorphologicalToken functionality
+"""
 import unittest
 
 import pytest
@@ -6,6 +9,9 @@ from pipeline import MorphologicalToken
 
 
 class MorphologicalTokenTest(unittest.TestCase):
+    """
+    Tests for MorphologicalToken realization
+    """
 
     def setUp(self) -> None:
         self.token = MorphologicalToken('Original_token')
@@ -18,6 +24,9 @@ class MorphologicalTokenTest(unittest.TestCase):
     @pytest.mark.mark10
     @pytest.mark.stage_3_3_morphological_token_checks
     def test_morphological_token_instantiation(self) -> None:
+        """
+        Ensure that MorphologicalToken instance is instantiated correctly
+        """
         new_token = MorphologicalToken('оригинальное слово')
         attrs = ['original_word', 'normalized_form', 'tags_mystem', 'tags_pymorphy']
         self.assertTrue(all((
@@ -40,6 +49,9 @@ class MorphologicalTokenTest(unittest.TestCase):
     @pytest.mark.mark10
     @pytest.mark.stage_3_3_morphological_token_checks
     def test_get_cleaned(self) -> None:
+        """
+        Ensure that clean representation of a token is appropriate
+        """
         self.assertEqual(self.token.get_cleaned(), 'original_token')
 
     @pytest.mark.mark6
@@ -47,6 +59,9 @@ class MorphologicalTokenTest(unittest.TestCase):
     @pytest.mark.mark10
     @pytest.mark.stage_3_3_morphological_token_checks
     def test_get_single_tagged(self):
+        """
+        Ensure that single-tagged representation of a token is appropriate
+        """
         print(self.token.tags_mystem)
         self.assertEqual(self.token.get_single_tagged(), 'lemma<tags_mystem>')
 
@@ -54,5 +69,8 @@ class MorphologicalTokenTest(unittest.TestCase):
     @pytest.mark.mark10
     @pytest.mark.stage_3_3_morphological_token_checks
     def test_get_multiple_tagged(self):
+        """
+        Ensure that single-tagged representation of a token is appropriate
+        """
         print(self.token.tags_mystem)
         self.assertEqual(self.token.get_single_tagged(), 'lemma<tags_mystem>')
