@@ -33,11 +33,6 @@ class InconsistentDatasetError(Exception):
     """
 
 
-class FileNotFoundError(Exception):
-    """
-    """
-
-
 class MorphologicalToken:
     """
     Stores language params for each processed token
@@ -140,6 +135,7 @@ class TextProcessingPipeline:
         text = raw_text.replace('-\n', '')
 
         result = Mystem().analyze(text)
+
         morph_tokens = []
 
         for token in result:
@@ -150,22 +146,23 @@ class TextProcessingPipeline:
             if not token["analysis"]:
                 continue
 
-            original = token["text"]
-            if not re.match(r"[A-Za-zА-Яа-яЁё]", original):
+            original_word = token["text"]
+            if not re.match(r"[A-Za-zА-Яа-яЁё]", original_word):
                 continue
 
-            morph_token = MorphologicalToken(original_word=original)
+            morph_token = MorphologicalToken(original_word=original_word)
 
             # next pre requisite
-            if "lex" or "gr" not in (token_info['analysis'][0]):
+            if "lex" or "gr" not in (token['analysis'][0]):
                 continue
 
             # mystem tags
-            morph_token.normalized_form = token_info['analysis'][0]['lex']
-            morph_token.tags_mystem = token_info['analysis'][0]['gr']
+            morph_token.normalized_form = token['analysis'][0]['lex']
+            morph_token.tags_mystem = token['analysis'][0]['gr']
 
             # pymorphy tags
-            one_word = morph_token.parse(original)[0]
+            morph_pym = pymorphy2.MorphAnalyzer()
+            one_word = morph.parse(original)[0]
             morph_token.tags_pymorphy = one_word.tag
 
             morph_tokens.append(morph_token)
@@ -200,7 +197,7 @@ def validate_dataset(path_to_validate):
             raise FileNotFoundError
 
     # checking that there are 3 files with said index
-    if not all(v == 3 for v in checker.values()):
+    if not all(value == 3 for value in checker.values()):
         raise InconsistentDatasetError
 
     # checking whether keys are consistent from 1 to N (max in files indices)
