@@ -8,23 +8,29 @@ import random
 
 
 def parser():
-    parser = argparse.ArgumentParser(description=' ')
-    parser.add_argument('--config_path',
+    """
+    A function to change parameters
+    """
+    parser_ = argparse.ArgumentParser(description=' ')
+    parser_.add_argument('--config_path',
                         type=str,
                         required=True,
                         help='Full path to the scrapper config file')
-    return parser
+    return parser_
 
 
 def change_volume(config: str):
-    with open(config) as f:
-        reference = json.load(f)
+    """
+    A function to change volume
+    """
+    with open(config) as file:
+        reference = json.load(file)
 
     num_articles = random.randint(2, 7)
     reference["total_articles_to_find_and_parse"] = num_articles
 
-    with open(config, "w", encoding="utf-8") as f:
-        json.dump(reference, f)
+    with open(config, "w", encoding="utf-8") as file:
+        json.dump(reference, file)
 
 
 if __name__ == "__main__":
