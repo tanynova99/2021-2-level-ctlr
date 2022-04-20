@@ -3,8 +3,13 @@ Pipeline for text processing implementation
 """
 
 from pathlib import Path
+import re
 
-from constants import ASSETS_PATH
+import pymorphy2
+from pymystem3 import Mystem
+
+from constants import ASSETS_PATH, PATH_RAW_END
+from core_utils.article import Article, ArtifactType
 
 
 class EmptyDirectoryError(Exception):
@@ -39,13 +44,16 @@ class MorphologicalToken:
     """
 
     def __init__(self, original_word):
-        pass
+        self.original_form = original_word
+        self.normalized_form = ''
+        self.tags_mystem = ''
+        self.tags_pymorphy = ''
 
     def get_cleaned(self):
         """
         Returns lowercased original form of a token
         """
-        pass
+        return self.original_word.lower()
 
     def get_single_tagged(self):
         """
@@ -66,19 +74,30 @@ class CorpusManager:
     """
 
     def __init__(self, path_to_raw_txt_data: str):
-        pass
+        self.path_to_raw_txt_data = path_to_raw_txt_data
+        self._storage = {}
+        self._scan_dataset()
 
     def _scan_dataset(self):
         """
         Register each dataset entry
         """
-        pass
+        path_to_save = Path(self.path_to_raw_txt_data)
+
+        for file_path in path_to_save.iterdir():
+
+            file_name = file_path.name
+
+            if file_name[-8:] == PATH_RAW_END:
+                match = re.search(r'\d+', file_name)
+                article_id = int(match.group(0))
+                self._storage[article_id] = Article(url=None, article_id=article_id)
 
     def get_articles(self):
         """
         Returns storage params
         """
-        pass
+        return self._storage
 
 
 class TextProcessingPipeline:
@@ -87,19 +106,71 @@ class TextProcessingPipeline:
     """
 
     def __init__(self, corpus_manager: CorpusManager):
-        pass
+        self.corpus_manager = corpus_manager
 
     def run(self):
         """
         Runs pipeline process scenario
         """
-        pass
+        articles = self.corpus_manager.get_articles().values()
+
+        for article in articles:
+            raw_text = article.get_raw_text()
+            processed_tokens = self._process(raw_text)
+
+        cleaned_tokens = []
+        single_tagged_tokens = []
+        multiple_tagged_tokens = []
+
+        for processed_token in processed_tokens:
+            cleaned_tokens.append(processed_token.get_cleaned())
+            single_tagged_tokens.append(processed_token.get_single_tagged())
+            multiple_tagged_tokens.append(processed_token.get_multiple_tagged())
+
+        article.save_as(' '.join(cleaned_tokens), kind=ArtifactType.cleaned)
+        article.save_as(' '.join(single_tagged_tokens), kind=ArtifactType.single_tagged)
+        article.save_as(' '.join(multiple_tagged_tokens), kind=ArtifactType.multiple_tagged)
 
     def _process(self, raw_text: str):
         """
         Processes each token and creates MorphToken class instance
         """
-        pass
+        # txt from pdf comes with words like след-ующий
+        # this replace deals with them
+        text = raw_text.replace('-\n', '')
+
+        result = Mystem().analyze(text)
+        morph_tokens = []
+
+        for token in result:
+
+            # pre requisites for the token to be usable
+            if "analysis" not in token:
+                continue
+            if not token["analysis"]:
+                continue
+
+            original = token["text"]
+            if not re.match(r"[A-Za-zА-Яа-яЁё]", original):
+                continue
+
+            morph_token = MorphologicalToken(original_word=original)
+
+            # next pre requisite
+            if "lex" or "gr" not in (token_info['analysis'][0]):
+                continue
+
+            # mystem tags
+            morph_token.normalized_form = token_info['analysis'][0]['lex']
+            morph_token.tags_mystem = token_info['analysis'][0]['gr']
+
+            # pymorphy tags
+            one_word = morph_token.parse(original)[0]
+            morph_token.tags_pymorphy = one_word.tag
+
+            morph_tokens.append(morph_token)
+
+        return morph_tokens
 
 
 def validate_dataset(path_to_validate):
@@ -134,8 +205,8 @@ def validate_dataset(path_to_validate):
 
     # checking whether keys are consistent from 1 to N (max in files indices)
     current_i = list(int(x) for x in checker.keys())
-    ideal_i = range(1, max(current_i)+1)
-    if not set(current_i) & set(ideal_i) == set(ideal_i)):
+    ideal_i = range(1, max(current_i) + 1)
+    if not set(current_i) & set(ideal_i) == set(ideal_i):
         raise InconsistentDatasetError
 
     return None
@@ -144,6 +215,9 @@ def validate_dataset(path_to_validate):
 def main():
     # YOUR CODE HERE
     validate_dataset(ASSETS_PATH)
+    corpus_manager = CorpusManager(path_to_raw_txt_data=ASSETS_PATH)
+    pipeline = TextProcessingPipeline(corpus_manager=corpus_manager)
+    pipeline.run()
 
 
 if __name__ == "__main__":

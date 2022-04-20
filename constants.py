@@ -10,3 +10,4 @@ CRAWLER_CONFIG_PATH = PROJECT_ROOT / 'scrapper_config.json'
 DOMAIN = "https://journals.kantiana.ru"
 HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
                          '(KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36'}
+PATH_RAW_END = "_raw.txt"
