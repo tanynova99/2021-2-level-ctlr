@@ -111,12 +111,29 @@ def validate_dataset(path_to_validate):
         raise EmptyDirectoryError
 
     file_formats = [".json", ".txt", ".pdf"]
-    files = path_to_validate.iterdir()
-    for i, file in enumerate(files, 1):
-        if str(i) != str(file.name)[0]:
-            raise InconsistentDatasetError
+    checker = {}
+    # creating a dictionary of file indexes
+    # and checking the formats
+    for file in Path(path_to_validate).iterdir():
+
+        file_index = file.name.split("_")[0]
+        if file_index not in checker.keys():
+            checker[file_index] = 1
+        else:
+            checker[file_index] += 1
+
         if file.suffix not in file_formats:
             raise FileNotFoundError
+
+    # checking that there are 3 files with said index
+    if not all(v == 3 for v in checker.values()):
+        raise InconsistentDatasetError
+
+    # checking whether keys are consistent from 1 to N (max in files indices)
+    current_i = list(int(x) for x in checker.keys())
+    ideal_i = range(1, max(current_i)+1)
+    if not set(current_i) & set(ideal_i) == set(ideal_i)):
+        raise InconsistentDatasetError
 
     return None
 
