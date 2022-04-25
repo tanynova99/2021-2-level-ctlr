@@ -8,19 +8,13 @@ import re
 import pymorphy2
 from pymystem3 import Mystem
 
-from constants import ASSETS_PATH, PATH_RAW_END
+from constants import ASSETS_PATH
 from core_utils.article import Article, ArtifactType
 
 
 class EmptyDirectoryError(Exception):
     """
     No data to process
-    """
-
-
-class NotDirectoryError(Exception):
-    """
-    Not a directory
     """
 
 
@@ -77,16 +71,14 @@ class CorpusManager:
         """
         Register each dataset entry
         """
-        path_to_save = Path(self.path_to_raw_txt_data)
 
-        for file_path in path_to_save.iterdir():
+        files = list(self.path_to_raw_txt_data.glob('*_raw.txt'))
 
-            file_name = file_path.name
-
-            if file_name[-8:] == PATH_RAW_END:
-                match = re.search(r'\d+', file_name)
-                article_id = int(match.group(0))
-                self._storage[article_id] = Article(url=None, article_id=article_id)
+        for file in files:
+            file_name = file.name
+            match = re.search(r'\d+', file_name)
+            article_id = int(match.group(0))
+            self._storage[article_id] = Article(url=None, article_id=article_id)
 
     def get_articles(self):
         """
