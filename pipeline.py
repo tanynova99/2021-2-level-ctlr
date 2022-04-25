@@ -129,6 +129,7 @@ class TextProcessingPipeline:
         result = Mystem().analyze(text)
 
         morph_tokens = []
+        morph = pymorphy2.MorphAnalyzer()
 
         for token in result:
 
@@ -153,13 +154,10 @@ class TextProcessingPipeline:
             morph_token.tags_mystem = token['analysis'][0]['gr']
 
             # pymorphy tags
-            morph_pym = pymorphy2.MorphAnalyzer()
             one_word = morph.parse(original)[0]
             morph_token.tags_pymorphy = one_word.tag
 
             morph_tokens.append(morph_token)
-
-        return morph_tokens
 
 
 def validate_dataset(path_to_validate):
@@ -193,7 +191,7 @@ def validate_dataset(path_to_validate):
         raise InconsistentDatasetError
 
     # checking whether keys are consistent from 1 to N (max in files indices)
-    current_i = list(int(x) for x in checker.keys())
+    current_i = list(int(x) for x in checker)
     ideal_i = range(1, max(current_i) + 1)
     if not set(current_i) & set(ideal_i) == set(ideal_i):
         raise InconsistentDatasetError
