@@ -105,18 +105,18 @@ class TextProcessingPipeline:
             raw_text = article.get_raw_text()
             processed_tokens = self._process(raw_text)
 
-        cleaned_tokens = []
-        single_tagged_tokens = []
-        multiple_tagged_tokens = []
+            cleaned_tokens = []
+            single_tagged_tokens = []
+            multiple_tagged_tokens = []
 
-        for processed_token in processed_tokens:
-            cleaned_tokens.append(processed_token.get_cleaned())
-            single_tagged_tokens.append(processed_token.get_single_tagged())
-            multiple_tagged_tokens.append(processed_token.get_multiple_tagged())
+            for processed_token in processed_tokens:
+                cleaned_tokens.append(processed_token.get_cleaned())
+                single_tagged_tokens.append(processed_token.get_single_tagged())
+                multiple_tagged_tokens.append(processed_token.get_multiple_tagged())
 
-        article.save_as(' '.join(cleaned_tokens), kind=ArtifactType.cleaned)
-        article.save_as(' '.join(single_tagged_tokens), kind=ArtifactType.single_tagged)
-        article.save_as(' '.join(multiple_tagged_tokens), kind=ArtifactType.multiple_tagged)
+            article.save_as(' '.join(cleaned_tokens), kind=ArtifactType.cleaned)
+            article.save_as(' '.join(single_tagged_tokens), kind=ArtifactType.single_tagged)
+            article.save_as(' '.join(multiple_tagged_tokens), kind=ArtifactType.multiple_tagged)
 
     def _process(self, raw_text: str):
         """
@@ -145,7 +145,7 @@ class TextProcessingPipeline:
             morph_token = MorphologicalToken(original_word=original_word)
 
             # next pre requisite
-            if "lex" or "gr" not in (token['analysis'][0]):
+            if "lex" or "gr" not in token['analysis'][0]:
                 continue
 
             # mystem tags
