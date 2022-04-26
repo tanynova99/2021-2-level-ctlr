@@ -42,7 +42,7 @@ class MorphologicalToken:
         """
         Returns lowercased original form of a token
         """
-        return self.original_word.lower()
+        return self.original_form.lower()
 
     def get_single_tagged(self):
         """
@@ -103,7 +103,7 @@ class TextProcessingPipeline:
 
         for article in articles:
             raw_text = article.get_raw_text()
-            self._process(raw_text)
+            processed_tokens = self._process(raw_text)
 
             cleaned_tokens = []
             single_tagged_tokens = []
@@ -154,7 +154,7 @@ class TextProcessingPipeline:
             morph_token.tags_mystem = token['analysis'][0]['gr']
 
             # pymorphy tags
-            one_word = morph.parse(original)[0]
+            one_word = morph.parse(original_word)[0]
             morph_token.tags_pymorphy = one_word.tag
 
             morph_tokens.append(morph_token)
