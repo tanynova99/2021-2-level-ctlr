@@ -103,7 +103,7 @@ class TextProcessingPipeline:
 
         for article in articles:
             raw_text = article.get_raw_text()
-            processed_tokens = self._process(raw_text)
+            self._process(raw_text)
 
             cleaned_tokens = []
             single_tagged_tokens = []
@@ -165,14 +165,21 @@ def validate_dataset(path_to_validate):
     Validates folder with assets
     """
 
+    if isinstance(path_to_validate, str):
+        path_to_validate = Path(path_to_validate)
+
+    if not path_to_validate.exists():
+        raise FileNotFoundError
+
     if not path_to_validate.is_dir():
         raise NotADirectoryError
 
-    if not any(Path(path_to_validate).iterdir()):
+    if not any(path_to_validate.iterdir()):
         raise EmptyDirectoryError
 
     file_formats = [".json", ".txt", ".pdf"]
     checker = {}
+
     # creating a dictionary of file indexes
     # and checking the formats
     for file in Path(path_to_validate).iterdir():
