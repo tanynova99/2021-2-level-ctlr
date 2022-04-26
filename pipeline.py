@@ -158,8 +158,6 @@ class TextProcessingPipeline:
 
             morph_tokens.append(morph_token)
 
-        return morph_tokens
-
 
 def validate_dataset(path_to_validate):
     """
