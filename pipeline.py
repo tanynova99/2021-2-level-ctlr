@@ -99,24 +99,23 @@ class TextProcessingPipeline:
         """
         Runs pipeline process scenario
         """
-        articles = self.corpus_manager.get_articles().values()
+        articles = CorpusManager.get_articles(self.corpus_manager).values()
 
         for article in articles:
-            raw_text = Article.get_raw_text()
-            processed_tokens = self._process(raw_text)
+            raw_text = Article.get_raw_text(article)
+            tokens = self._process(raw_text)
 
-            cleaned_tokens = []
-            single_tagged_tokens = []
-            multiple_tagged_tokens = []
+            cleaned = []
+            single_tagged = []
+            multiple_tagged = []
+            for token in tokens:
+                cleaned.append(token.get_cleaned())
+                single_tagged.append(token.get_single_tagged())
+                multiple_tagged.append(token.get_multiple_tagged())
 
-            for processed_token in processed_tokens:
-                cleaned_tokens.append(processed_token.get_cleaned())
-                single_tagged_tokens.append(processed_token.get_single_tagged())
-                multiple_tagged_tokens.append(processed_token.get_multiple_tagged())
-
-            article.save_as(' '.join(cleaned_tokens), kind=ArtifactType.cleaned)
-            article.save_as(' '.join(single_tagged_tokens), kind=ArtifactType.single_tagged)
-            article.save_as(' '.join(multiple_tagged_tokens), kind=ArtifactType.multiple_tagged)
+            article.save_as(' '.join(cleaned), ArtifactType.cleaned)
+            article.save_as(' '.join(single_tagged), ArtifactType.single_tagged)
+            article.save_as(' '.join(multiple_tagged), ArtifactType.multiple_tagged)
 
     def _process(self, raw_text: str):
         """
@@ -159,7 +158,7 @@ class TextProcessingPipeline:
 
             morph_tokens.append(morph_token)
 
-        return morphological_tokens
+        return morph_tokens
 
 
 def validate_dataset(path_to_validate):
