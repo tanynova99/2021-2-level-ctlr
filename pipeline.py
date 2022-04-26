@@ -102,7 +102,7 @@ class TextProcessingPipeline:
         articles = self.corpus_manager.get_articles().values()
 
         for article in articles:
-            raw_text = article.get_raw_text()
+            raw_text = Article.get_raw_text()
             processed_tokens = self._process(raw_text)
 
             cleaned_tokens = []
@@ -158,6 +158,8 @@ class TextProcessingPipeline:
             morph_token.tags_pymorphy = one_word.tag
 
             morph_tokens.append(morph_token)
+
+        return morphological_tokens
 
 
 def validate_dataset(path_to_validate):
