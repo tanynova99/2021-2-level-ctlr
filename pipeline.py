@@ -72,10 +72,10 @@ class CorpusManager:
         Register each dataset entry
         """
 
-        files = list(self.path.glob('*_raw.txt'))
+        files = self.path.glob('*_raw.txt')
 
         for file in files:
-            match = re.search(r'\d+', file.name)
+            match = re.match(r'\d+', file.name)
             article_id = int(match.group(0))
             self._storage[article_id] = Article(url=None, article_id=article_id)
 
@@ -216,7 +216,7 @@ def validate_dataset(path_to_validate):
 
 
 def main():
-#    validate_dataset(ASSETS_PATH)
+    validate_dataset(ASSETS_PATH)
     corpus_manager = CorpusManager(ASSETS_PATH)
     pipeline = TextProcessingPipeline(corpus_manager)
     pipeline.run()
