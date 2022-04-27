@@ -99,7 +99,6 @@ class TextProcessingPipeline:
         Runs pipeline process scenario
         """
         articles = self.corpus_manager.get_articles().values()
-
         for article in articles:
             raw_text = article.get_raw_text()
             processed_tokens = self._process(raw_text)
@@ -127,7 +126,10 @@ class TextProcessingPipeline:
 
         result = Mystem().analyze(text)
 
+        # launching morph_tokens list which then is appended with MorphologicalToken class instances
         morph_tokens = []
+
+        # pymorphy analyzer which will be used for filling pymorphy tags
         morph = pymorphy2.MorphAnalyzer()
 
         for token in result:
@@ -135,16 +137,12 @@ class TextProcessingPipeline:
             # pre requisites for the token to be usable
             if "analysis" not in token:
                 continue
-            if not token["analysis"]:
+            if not token.get('analysis'):
+                continue
+            if not (token['analysis'][0].get("gr")) or not (token['analysis'][0].get("lex")):
                 continue
 
             original_word = token["text"]
-
-            if not token.get('analysis'):
-                continue
-
-            if "lex" or "gr" not in token['analysis'][0]:
-                continue
 
             morph_token = MorphologicalToken(original_word=original_word)
 
@@ -153,6 +151,7 @@ class TextProcessingPipeline:
             morph_token.tags_mystem = token['analysis'][0]['gr']
 
             # pymorphy tags
+
             one_word = morph.parse(original_word)[0]
             morph_token.tags_pymorphy = one_word.tag
 
@@ -217,10 +216,9 @@ def validate_dataset(path_to_validate):
 
 
 def main():
-    # YOUR CODE HERE
 #    validate_dataset(ASSETS_PATH)
-    corpus_manager = CorpusManager(path_to_raw_txt_data=ASSETS_PATH)
-    pipeline = TextProcessingPipeline(corpus_manager=corpus_manager)
+    corpus_manager = CorpusManager(ASSETS_PATH)
+    pipeline = TextProcessingPipeline(corpus_manager)
     pipeline.run()
 
 
