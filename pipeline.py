@@ -33,7 +33,7 @@ class MorphologicalToken:
     """
 
     def __init__(self, original_word):
-        self.original_form = original_word
+        self.original_word = original_word
         self.normalized_form = ''
         self.tags_mystem = ''
         self.tags_pymorphy = ''
@@ -42,7 +42,7 @@ class MorphologicalToken:
         """
         Returns lowercased original form of a token
         """
-        return self.original_form.lower()
+        return self.original_word.lower()
 
     def get_single_tagged(self):
         """
