@@ -139,7 +139,7 @@ class TextProcessingPipeline:
                 continue
             if not token.get('analysis'):
                 continue
-            if not (token['analysis'][0].get("gr")) or not (token['analysis'][0].get("lex")):
+            if not (token['analysis'][0].get("gr") or token['analysis'][0].get("lex")):
                 continue
 
             original_word = token["text"]
