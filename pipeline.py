@@ -75,8 +75,7 @@ class CorpusManager:
         files = list(self.path_to_raw_txt_data.glob('*_raw.txt'))
 
         for file in files:
-            file_name = file.name
-            match = re.search(r'\d+', file_name)
+            match = re.search(r'\d+', file.name)
             article_id = int(match.group(0))
             self._storage[article_id] = Article(url=None, article_id=article_id)
 
@@ -166,16 +165,15 @@ def validate_dataset(path_to_validate):
     Validates folder with assets
     """
 
-    if isinstance(path_to_validate, str):
-        path_to_validate = Path(path_to_validate)
+    path = Path(path_to_validate)
 
-    if not path_to_validate.exists():
+    if not path.exists():
         raise FileNotFoundError
 
-    if not path_to_validate.is_dir():
+    if not path.is_dir():
         raise NotADirectoryError
 
-    if not any(path_to_validate.iterdir()):
+    if not any(path.iterdir()):
         raise EmptyDirectoryError
 
     file_formats = [".json", ".txt", ".pdf"]
@@ -183,26 +181,38 @@ def validate_dataset(path_to_validate):
 
     # creating a dictionary of file indexes
     # and checking the formats
-    for file in Path(path_to_validate).iterdir():
+    for file in path.iterdir():
+
+        match_to = re.match(r'\d+', file.name)
+
+        if not match_to:
+            raise InconsistentDatasetError("There is a file with incorrect name pattern.")
+
+        if file.stat().st_size == 0:
+            raise InconsistentDatasetError("File is empty.")
 
         file_index = file.name.split("_")[0]
+
         if file_index not in checker.keys():
             checker[file_index] = 1
         else:
             checker[file_index] += 1
 
         if file.suffix not in file_formats:
-            raise FileNotFoundError
+            raise FileNotFoundError("File with incorrect format.")
 
     # checking that there are 3 files with said index
-    if not all(value == 3 for value in checker.values()):
-        raise InconsistentDatasetError
+
+    if not all((value >= 2) and (value <= 4) for value in checker.values()):
+        print(checker)
+        raise InconsistentDatasetError("There are files missing.")
 
     # checking whether keys are consistent from 1 to N (max in files indices)
     current_i = list(int(x) for x in checker)
     ideal_i = range(1, max(current_i) + 1)
+
     if not set(current_i) & set(ideal_i) == set(ideal_i):
-        raise InconsistentDatasetError
+        raise InconsistentDatasetError("The numbering is inconsistent.")
 
 
 def main():
