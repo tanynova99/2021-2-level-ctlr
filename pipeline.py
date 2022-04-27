@@ -63,7 +63,7 @@ class CorpusManager:
     """
 
     def __init__(self, path_to_raw_txt_data: str):
-        self.path_to_raw_txt_data = path_to_raw_txt_data
+        self.path = Path(path_to_raw_txt_data)
         self._storage = {}
         self._scan_dataset()
 
@@ -72,7 +72,7 @@ class CorpusManager:
         Register each dataset entry
         """
 
-        files = list(self.path_to_raw_txt_data.glob('*_raw.txt'))
+        files = list(self.path.glob('*_raw.txt'))
 
         for file in files:
             match = re.search(r'\d+', file.name)
@@ -139,14 +139,14 @@ class TextProcessingPipeline:
                 continue
 
             original_word = token["text"]
-            if not re.match(r"[A-Za-zА-Яа-яЁё]", original_word):
+
+            if not token.get('analysis'):
+                continue
+
+            if "lex" or "gr" not in token['analysis'][0]:
                 continue
 
             morph_token = MorphologicalToken(original_word=original_word)
-
-            # next pre requisite
-            if "lex" or "gr" not in token['analysis'][0]:
-                continue
 
             # mystem tags
             morph_token.normalized_form = token['analysis'][0]['lex']
@@ -159,6 +159,7 @@ class TextProcessingPipeline:
             morph_tokens.append(morph_token)
 
         return morph_tokens
+
 
 def validate_dataset(path_to_validate):
     """
@@ -189,6 +190,7 @@ def validate_dataset(path_to_validate):
             raise InconsistentDatasetError("There is a file with incorrect name pattern.")
 
         if file.stat().st_size == 0:
+            print(file.name)
             raise InconsistentDatasetError("File is empty.")
 
         file_index = file.name.split("_")[0]
@@ -216,7 +218,7 @@ def validate_dataset(path_to_validate):
 
 def main():
     # YOUR CODE HERE
-    validate_dataset(ASSETS_PATH)
+#    validate_dataset(ASSETS_PATH)
     corpus_manager = CorpusManager(path_to_raw_txt_data=ASSETS_PATH)
     pipeline = TextProcessingPipeline(corpus_manager=corpus_manager)
     pipeline.run()
