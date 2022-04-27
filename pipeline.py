@@ -203,8 +203,7 @@ def validate_dataset(path_to_validate):
 
     # checking that there are 3 files with said index
 
-    if not all((value >= 2) and (value <= 4) for value in checker.values()):
-        print(checker)
+    if not all(value >= 2 for value in checker.values()):
         raise InconsistentDatasetError("There are files missing.")
 
     # checking whether keys are consistent from 1 to N (max in files indices)
