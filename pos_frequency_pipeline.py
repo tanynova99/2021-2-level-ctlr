@@ -23,7 +23,6 @@ class IncorrectFormatError(Exception):
 
 
 class POSFrequencyPipeline:
-
     def __init__(self, corpus_manager: CorpusManager):
         self.corpus_manager = corpus_manager
 
