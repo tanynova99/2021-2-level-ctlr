@@ -15,12 +15,15 @@ class EmptyFileError(Exception):
     Custom error
     """
 
+
 class IncorrectFormatError(Exception):
     """
     Custom error
     """
 
+
 class POSFrequencyPipeline:
+
     def __init__(self, corpus_manager: CorpusManager):
         self.corpus_manager = corpus_manager
 
@@ -30,7 +33,6 @@ class POSFrequencyPipeline:
         """
 
         for article in self.corpus_manager.get_articles().values():
-
             # get the file to take the pos tags from
             with open(article.get_file_path(ArtifactType.single_tagged), encoding="utf-8") as st_file:
                 morph_text = st_file.read()
@@ -59,6 +61,7 @@ class POSFrequencyPipeline:
 
         return freqs_dict
 
+
 def validate_input(to_validate):
 
     if not to_validate:
@@ -67,11 +70,13 @@ def validate_input(to_validate):
     if not isinstance(to_validate, str):
         raise IncorrectFormatError("The file should be read into string.")
 
+
 def main():
     validate_dataset(ASSETS_PATH)
     corpus_manager = CorpusManager(ASSETS_PATH)
     pipeline = POSFrequencyPipeline(corpus_manager=corpus_manager)
     pipeline.run()
+
 
 if __name__ == "__main__":
     main()
