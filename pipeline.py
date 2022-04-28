@@ -176,7 +176,7 @@ def validate_dataset(path_to_validate):
     if not any(path.iterdir()):
         raise EmptyDirectoryError
 
-    file_formats = [".json", ".txt", ".pdf"]
+    file_formats = [".json", ".txt", ".pdf", ".png"]
     checker = {}
 
     # creating a dictionary of file indexes
