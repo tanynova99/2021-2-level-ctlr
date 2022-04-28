@@ -2,4 +2,4 @@
 8
 
 # Target score for pipeline.py:
-8
+10
