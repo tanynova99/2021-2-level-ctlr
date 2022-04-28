@@ -16,7 +16,9 @@ class EmptyFileError(Exception):
     """
 
 class IncorrectFormatError(Exception):
-
+    """
+    Custom error
+    """
 
 class POSFrequencyPipeline:
     def __init__(self, corpus_manager: CorpusManager):
