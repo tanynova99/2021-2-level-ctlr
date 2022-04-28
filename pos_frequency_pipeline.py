@@ -66,7 +66,10 @@ def validate_input(to_validate):
         raise IncorrectFormatError("The file should be read into string.")
 
 def main():
-
+    validate_dataset(ASSETS_PATH)
+    corpus_manager = CorpusManager(ASSETS_PATH)
+    pipeline = POSFrequencyPipeline(corpus_manager=corpus_manager)
+    pipeline.run()
 
 if __name__ == "__main__":
     main()
