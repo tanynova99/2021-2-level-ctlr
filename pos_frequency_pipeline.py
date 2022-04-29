@@ -73,13 +73,13 @@ class POSFrequencyPipeline:
 
         nouns = re.findall(r"<S.*>", text)
         cases_search = re.compile(r"([а-я]+),(?=мн|ед)")
+        cases_names = ["им", "род", "дат", "вин", "твор", "пр", "парт", "местн", "зват"]
 
         for noun in nouns:
             cases = re.findall(cases_search, noun)
             for case in cases:
-                print(freqs_dict)
-                print()
-                freqs_dict[case] = freqs_dict.get(case, 0) + 1
+                if case in cases_names:
+                    freqs_dict[case] = freqs_dict.get(case, 0) + 1
 
         return freqs_dict
 
