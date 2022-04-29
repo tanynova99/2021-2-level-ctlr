@@ -103,7 +103,6 @@ class TextProcessingPipeline:
         for article in articles:
             raw_text = article.get_raw_text()
             processed_tokens = self._process(raw_text)
-            # print(article.article_id)
 
             cleaned_tokens = []
             single_tagged_tokens = []
