@@ -74,9 +74,10 @@ class CorpusManager:
 
         files = self.path.glob('*_raw.txt')
 
+        pattern = re.compile(r'(\d+)')
+
         for file in files:
-            match = re.match(r'\d+', file.name)
-            article_id = int(match.group(0))
+            article_id = int(re.match(pattern, file.name).group(0))
             self._storage[article_id] = Article(url=None, article_id=article_id)
 
     def get_articles(self):
@@ -102,10 +103,12 @@ class TextProcessingPipeline:
         for article in articles:
             raw_text = article.get_raw_text()
             processed_tokens = self._process(raw_text)
+            # print(article.article_id)
 
             cleaned_tokens = []
             single_tagged_tokens = []
             multiple_tagged_tokens = []
+
 
             for processed_token in processed_tokens:
                 cleaned_tokens.append(processed_token.get_cleaned())
@@ -122,16 +125,13 @@ class TextProcessingPipeline:
         """
         # txt from pdf comes with words like след-ующий
         # this replace deals with them
-        text = raw_text.replace('-\n', '')
-
+        text = raw_text.replace('-\n', '').replace('\n', ' ')
         result = Mystem().analyze(text)
-
         # launching morph_tokens list which then is appended with MorphologicalToken class instances
         morph_tokens = []
 
         # pymorphy analyzer which will be used for filling pymorphy tags
         morph = pymorphy2.MorphAnalyzer()
-
         for token in result:
 
             # pre requisites for the token to be usable
@@ -181,15 +181,17 @@ def validate_dataset(path_to_validate):
 
     # creating a dictionary of file indexes
     # and checking the formats
+
+    pattern = re.compile(r'\d+')
+
     for file in path.iterdir():
 
-        match_to = re.match(r'\d+', file.name)
+        match_to = re.match(pattern, file.name)
 
         if not match_to:
             raise InconsistentDatasetError("There is a file with incorrect name pattern.")
 
         if file.stat().st_size == 0:
-            print(file.name)
             raise InconsistentDatasetError("File is empty.")
 
         file_index = file.name.split("_")[0]
@@ -202,7 +204,7 @@ def validate_dataset(path_to_validate):
         if file.suffix not in file_formats:
             raise FileNotFoundError("File with incorrect format.")
 
-    # checking that there are 3 files with said index
+    # checking that there are necessary files with said index
 
     if not all(value >= 2 for value in checker.values()):
         raise InconsistentDatasetError("There are files missing.")
