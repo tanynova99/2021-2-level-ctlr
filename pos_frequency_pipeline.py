@@ -30,6 +30,7 @@ class POSFrequencyPipeline:
         """
         Running the pipeline scenario
         """
+
         for article in self.corpus_manager.get_articles().values():
             
             # get the file to take the pos tags from
