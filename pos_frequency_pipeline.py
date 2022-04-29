@@ -32,6 +32,7 @@ class POSFrequencyPipeline:
         """
 
         for article in self.corpus_manager.get_articles().values():
+            
             # get the file to take the pos tags from
             with open(article.get_file_path(ArtifactType.single_tagged), encoding="utf-8") as st_file:
                 morph_text = st_file.read()
