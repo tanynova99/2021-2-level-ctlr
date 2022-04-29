@@ -38,7 +38,10 @@ class POSFrequencyPipeline:
                 morph_text = st_file.read()
 
             validate_input(morph_text)
-            freqs = self._generate_freqs(morph_text)
+            freqs = self._generate_freqs_pos(morph_text)
+
+            # TASK
+            freqs_cases = self._generate_freqs_n_cases(morph_text)
 
             # save calculated freqs to meta file
             with open(ASSETS_PATH / article.get_meta_file_path(), encoding="utf-8") as m_file:
@@ -51,13 +54,32 @@ class POSFrequencyPipeline:
 
             # visualise results
             visualize(statistics=freqs, path_to_save=ASSETS_PATH / f"{article.article_id}_image.png")
+            visualize(statistics=freqs_cases, path_to_save=ASSETS_PATH / f"{article.article_id}_case_image.png")
 
-    def _generate_freqs(self, text):
+    def _generate_freqs_pos(self, text):
 
         freqs_dict = {}
 
-        for pos in re.findall(r"<([A-Z]+)", text):
+        pos_pattern = re.findall(r"<([A-Z]+)", text)
+
+        for pos in pos_pattern:
             freqs_dict[pos] = freqs_dict.get(pos, 0) + 1
+
+        return freqs_dict
+
+    def _generate_freqs_n_cases(self, text):
+
+        freqs_dict = {}
+
+        nouns = re.findall(r"<S.*>", text)
+        cases_search = re.compile(r"([а-я]+),(?=мн|ед)")
+
+        for noun in nouns:
+            cases = re.findall(cases_search, noun)
+            for case in cases:
+                print(freqs_dict)
+                print()
+                freqs_dict[case] = freqs_dict.get(case, 0) + 1
 
         return freqs_dict
 
