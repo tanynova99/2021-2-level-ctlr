@@ -77,7 +77,12 @@ class CorpusManager:
         pattern = re.compile(r'(\d+)')
 
         for file in files:
-            article_id = int(re.match(pattern, file.name).group(0))
+            
+            if re.match(pattern, file.name).group(0).isdigit():
+                article_id = int(re.match(pattern, file.name).group(0))
+            else:
+                print("Unsuccessful article id extraction")
+            
             self._storage[article_id] = Article(url=None, article_id=article_id)
 
     def get_articles(self):
